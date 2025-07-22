@@ -1,4 +1,4 @@
-# 🌍 ChatLang – Real-Time WhatsApp Message Translator
+# 🌍 SarvVaani – Real-Time WhatsApp Message Translator
 
 ChatLang is a lightweight Chrome extension that overlays WhatsApp Web and instantly translates both incoming and outgoing messages between English, Hindi, and Tamil — powered by Google Gemini.
 
