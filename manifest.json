@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Sarvavaani",
+  "name": "SarvVaani",
   "version": "0.1.0",
   "description": "Translate WhatsApp Web chats in real-time.",
   "permissions": ["scripting", "activeTab", "storage"],
