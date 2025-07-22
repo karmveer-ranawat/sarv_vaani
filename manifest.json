@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "ChatLang",
+  "version": "0.0.1",
+  "description": "Translate WhatsApp Web chats in real-time.",
+  "permissions": ["scripting", "activeTab", "storage"],
+  "host_permissions": [
+    "https://web.whatsapp.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": ["content-script.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon.png",
+      "48": "icons/icon.png",
+      "128": "icons/icon.png"
+    }
+  }
+}
