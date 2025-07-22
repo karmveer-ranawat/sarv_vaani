@@ -1,6 +1,8 @@
 console.log("✅ ChatLang content script loaded!");
 
 let messageObserver = null;
+let lastMessageIds = new Set();
+let currentChatId = null;
 
 function extractTextFromBubble(bubble) {
   try {
@@ -9,6 +11,10 @@ function extractTextFromBubble(bubble) {
   } catch (e) {
     return "";
   }
+}
+
+function getBubbleId(bubble) {
+  return bubble.getAttribute("data-id") || bubble.getAttribute("id") || bubble.innerText.slice(0, 30);
 }
 
 function observeChatMessages() {
@@ -21,7 +27,11 @@ function observeChatMessages() {
 
   if (messageObserver) {
     messageObserver.disconnect();
+    console.log("🔁 Disconnected previous message observer.");
   }
+
+  // Reset seen message IDs to avoid logging all old messages again
+  lastMessageIds.clear();
 
   messageObserver = new MutationObserver((mutations) => {
     mutations.forEach(mutation => {
@@ -29,10 +39,15 @@ function observeChatMessages() {
         if (node.nodeType === 1) {
           const bubbles = node.querySelectorAll("div.message-in, div.message-out");
           bubbles.forEach(bubble => {
-            const text = extractTextFromBubble(bubble);
-            if (text) {
-              console.log("💬 Message detected:", text);
-              // Translation logic here
+            const bubbleId = getBubbleId(bubble);
+            if (!lastMessageIds.has(bubbleId)) {
+              lastMessageIds.add(bubbleId);
+
+              const text = extractTextFromBubble(bubble);
+              if (text) {
+                console.log("💬 Message detected:", text);
+                // Translation logic here
+              }
             }
           });
         }
@@ -45,10 +60,14 @@ function observeChatMessages() {
     subtree: true
   });
 
-  console.log("👀 Now observing new messages in current chat...");
+  console.log("👀 Now observing messages in current chat...");
 }
 
-// Watch for chat changes by observing the left chat list (or topbar)
+function getCurrentChatId() {
+  const chatTitle = document.querySelector("#main header span[title]");
+  return chatTitle ? chatTitle.innerText : null;
+}
+
 function observeChatSwitch() {
   const chatPanel = document.querySelector("#pane-side");
 
@@ -58,7 +77,12 @@ function observeChatSwitch() {
   }
 
   const chatSwitchObserver = new MutationObserver(() => {
-    setTimeout(observeChatMessages, 500); // slight delay to allow chat to load
+    const newChatId = getCurrentChatId();
+    if (newChatId && newChatId !== currentChatId) {
+      currentChatId = newChatId;
+      console.log("🔁 Chat switched to:", currentChatId);
+      setTimeout(observeChatMessages, 500); // delay to allow chat to load
+    }
   });
 
   chatSwitchObserver.observe(chatPanel, {
@@ -69,7 +93,6 @@ function observeChatSwitch() {
   console.log("🔄 Watching for chat switches...");
 }
 
-// Initial wait and setup
 const initInterval = setInterval(() => {
   if (document.querySelector("#pane-side") && document.querySelector("#main")) {
     clearInterval(initInterval);
