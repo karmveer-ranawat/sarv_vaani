@@ -129,7 +129,7 @@ chatlang/
 
 ## 👨‍💻 Author
 
-Made with ❤️ by **[Your Name](https://github.com/yourusername)**  
+Made with ❤️ by **[CyberWizard](https://github.com/karmveer-ranawat)**  
 Feedback and contributions are welcome!
 
 ---
