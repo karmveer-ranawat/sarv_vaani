@@ -87,7 +87,21 @@ Ensure your GCP IAM permissions and Vertex AI quotas are correctly set.
 
 ## 📁 Folder Structure
 
-<pre lang="text"> chatlang/ ├── manifest.json # Chrome extension manifest ├── background.js # Handles background events (if needed) ├── content-script.js # Injected into WhatsApp Web to hook messages ├── popup.html # UI for configuring API keys, model, etc. ├── popup.js # Logic for popup interactions ├── styles.css # Styling for the popup ├── icons/ # Extension icon assets │ ├── icon16.png │ ├── icon48.png │ └── icon128.png └── utils/ └── translator.js # Gemini streaming/non-streaming logic </pre>
+```text
+chatlang/
+├── manifest.json              # Chrome extension manifest
+├── background.js              # (Optional) background logic
+├── content-script.js          # Injected into WhatsApp Web
+├── popup.html                 # Settings popup UI
+├── popup.js                   # Handles popup logic
+├── styles.css                 # Styling for popup
+├── icons/
+│   ├── icon16.png
+│   ├── icon48.png
+│   └── icon128.png
+└── utils/
+    └── translator.js          # Gemini translation logic
+```
 
 ---
 
