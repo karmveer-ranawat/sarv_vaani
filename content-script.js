@@ -11,6 +11,12 @@ function extractTextFromBubble(bubble) {
   }
 }
 
+function dummyTranslateWithGemini(text, direction = "auto") {
+  // Placeholder for Gemini translation logic
+  console.log(`🌐 Translating [${direction}]:`, text);
+  return `[Translated] ${text}`;
+}
+
 function observeChatMessages() {
   const chatContainer = document.querySelector("#main .copyable-area");
 
@@ -29,10 +35,24 @@ function observeChatMessages() {
         if (node.nodeType === 1) {
           const bubbles = node.querySelectorAll("div.message-in, div.message-out");
           bubbles.forEach(bubble => {
+            const isIncoming = bubble.classList.contains("message-in");
+            const isOutgoing = bubble.classList.contains("message-out");
             const text = extractTextFromBubble(bubble);
+
             if (text) {
               console.log("💬 Message detected:", text);
-              // Translation logic here
+
+              if (isIncoming && text.startsWith("!")) {
+                const actualText = text.slice(1).trim(); // remove leading "!"
+                const translated = dummyTranslateWithGemini(actualText, "incoming");
+                console.log("🔁 Translated Incoming (!):", translated);
+              }
+
+              if (isOutgoing && text.startsWith("!")) {
+                const actualText = text.slice(1).trim(); // remove leading "!"
+                const translated = dummyTranslateWithGemini(actualText, "outgoing");
+                console.log("🔁 Translated Outgoing (!):", translated);
+              }
             }
           });
         }
@@ -48,7 +68,6 @@ function observeChatMessages() {
   console.log("👀 Now observing new messages in current chat...");
 }
 
-// Watch for chat changes by observing the left chat list (or topbar)
 function observeChatSwitch() {
   const chatPanel = document.querySelector("#pane-side");
 
@@ -58,7 +77,7 @@ function observeChatSwitch() {
   }
 
   const chatSwitchObserver = new MutationObserver(() => {
-    setTimeout(observeChatMessages, 500); // slight delay to allow chat to load
+    setTimeout(observeChatMessages, 500);
   });
 
   chatSwitchObserver.observe(chatPanel, {
@@ -69,7 +88,7 @@ function observeChatSwitch() {
   console.log("🔄 Watching for chat switches...");
 }
 
-// Initial wait and setup
+// Initial setup
 const initInterval = setInterval(() => {
   if (document.querySelector("#pane-side") && document.querySelector("#main")) {
     clearInterval(initInterval);
